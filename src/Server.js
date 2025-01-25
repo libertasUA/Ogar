@@ -36,6 +36,7 @@ class Server {
         this.nodes = []; // Total nodes
         this.nodesVirus = []; // Virus nodes
         this.nodesFood = []; // Food nodes
+        this.nodesSyperFood = []; // Super food nodes
         this.nodesEjected = []; // Ejected nodes
         this.nodesPlayer = []; // Player nodes
         this.movingNodes = []; // For move engine
@@ -100,7 +101,11 @@ class Server {
         if (this.config.serverStatsPort > 0) {
             this.startStatsServer(this.config.serverStatsPort);
         }
-        this.spawnCells(this.config.virusAmount, this.config.foodAmount);
+        this.spawnCells(
+            this.config.virusAmount, 
+            this.config.foodAmount, 
+            this.calculateSuperFoodAmount(this.config.foodAmount, this.config.minFoodPercentage, this.config.maxFoodPercentage)
+        );
     }
     onHttpServerOpen() {
         // Start Main Loop
@@ -231,6 +236,7 @@ class Server {
         this.nodes = [];
         this.nodesVirus = [];
         this.nodesFood = [];
+        this.nodesSyperFood = [];
         this.nodesEjected = [];
         this.nodesPlayer = [];
         this.movingNodes = [];
@@ -245,7 +251,11 @@ class Server {
         this.startTime = now.getTime();
         this.setBorder(this.config.borderWidth, this.config.borderHeight);
         this.quadTree = new QuadNode(this.border, 64, 32);
-        this.spawnCells(this.config.virusAmount, this.config.foodAmount);
+        this.spawnCells(
+            this.config.virusAmount, 
+            this.config.foodAmount, 
+            this.calculateSuperFoodAmount(this.config.foodAmount, this.config.minFoodPercentage, this.config.maxFoodPercentage)
+        );
         const date = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
         const time = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
         Logger.info(`Restarted ${date} ${time}`);
@@ -322,6 +332,21 @@ class Server {
             b: colorRGB[2]
         };
     }
+
+     calculateSuperFoodAmount(
+        foodAmount,
+        minFoodPercentage,
+        maxFoodPercentage
+      ) {
+        if (foodAmount <= 0 || minFoodPercentage < 0 || maxFoodPercentage < 0 || minFoodPercentage > maxFoodPercentage) {
+          throw new Error("Invalid input values");
+        }
+      
+        const percentage = Math.random() * (maxFoodPercentage - minFoodPercentage) + minFoodPercentage;
+        const superFoodAmount = (foodAmount * percentage) / 100;
+      
+        return Math.floor(superFoodAmount);
+      }
     removeNode(node) {
         // Remove from quad-tree
         node.isRemoved = true;
@@ -688,17 +713,35 @@ class Server {
         cell.color = this.getRandomColor();
         this.addNode(cell);
     }
+
+    spawnSuperFood() {
+        var cell = new Entity.SuperFood(this, null, this.randomPos(), this.config.foodMinSize);
+        if (this.config.foodMassGrow) {
+            var maxGrow = this.config.foodMaxSize - cell.radius;
+            cell.setSize(cell.radius += maxGrow * Math.random());
+        }
+        cell.color = {
+            r: 0,
+            g: 0,
+            b: 0
+        };
+        this.addNode(cell);
+    }
     spawnVirus() {
         var virus = new Entity.Virus(this, null, this.randomPos(), this.config.virusMinSize);
         this.safeSpawn(virus);
 
     }
-    spawnCells(virusCount, foodCount) {
+    spawnCells(virusCount, foodCount, superFoodCount) {
         for (var i = 0; i < foodCount; i++) {
             this.spawnFood();
         }
         for (var ii = 0; ii < virusCount; ii++) {
             this.spawnVirus();
+        }
+
+        for (var i = 0; i < superFoodCount; i++) {
+            this.spawnSuperFood();
         }
     }
     spawnPlayer(player, pos) {

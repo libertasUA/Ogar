@@ -8,7 +8,7 @@ class Cell {
         this._radius2 = 0;
         this.radius = 0;
         this._mass = 0;
-        this.type = -1; // 0 = Player Cell, 1 = Food, 2 = Virus, 3 = Ejected Mass
+        this.type = -1; // 0 = Player Cell, 1 = Food, 2 = Virus, 3 = Ejected Mass 4 = Super Food
         this.isVirus = false; // If true, then this cell has spikes around it
         this.isAgitated = false; // If true, then this cell has waves on it's outline
         this.killer = null; // Cell that ate this cell

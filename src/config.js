@@ -100,6 +100,13 @@ module.exports = Object.seal({
 "foodAmount": 700,
 "foodMassGrow": 1,
 
+// [SUPERFOOD]
+// descrption..
+"superFoodMinSize": 30,
+"superFoodMaxSize": 50,
+"minFoodPercentage": 30,
+"maxFoodPercentage": 40,
+
 // [VIRUSES]
 // virusMinSize: Minimum virus size. (vanilla: mass: val*val/100: 100 mass)
 // virusMaxSize: Maximum virus size (vanilla: mass: val*val/100: 200 mass)
