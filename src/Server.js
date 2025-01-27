@@ -715,16 +715,18 @@ class Server {
     }
 
     spawnSuperFood() {
-        var cell = new Entity.SuperFood(this, null, this.randomPos(), this.config.foodMinSize);
+        var cell = new Entity.SuperFood(
+            this, null, this.randomPos(), 
+            this.config.foodMinSize, 
+            this.config.superFoodSkin);
+
         if (this.config.foodMassGrow) {
             var maxGrow = this.config.foodMaxSize - cell.radius;
             cell.setSize(cell.radius += maxGrow * Math.random());
         }
-        cell.color = {
-            r: 0,
-            g: 0,
-            b: 0
-        };
+        if (!cell._skin)
+            cell.color = { r: 0, g: 0, b: 0};
+        
         this.addNode(cell);
     }
     spawnVirus() {

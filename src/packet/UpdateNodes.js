@@ -52,6 +52,8 @@ class UpdateNodes {
                 flags |= 0x10; // isAgitated
             if (node.type == 3)
                 flags |= 0x20; // isEjected
+            if (node.type == 4) 
+                flags |= 0x40; // isSoperFood
             writer.writeUInt8(flags >>> 0); // Flags
             writer.writeUInt16(0); // Name
         }
@@ -81,6 +83,8 @@ class UpdateNodes {
                 flags |= 0x10; // isAgitated
             if (node.type == 3)
                 flags |= 0x20; // isEjected
+            if (node.type == 4) 
+                flags |= 0x40; // isSoperFood
             writer.writeUInt8(flags >>> 0); // Flags
             if (cellName != null)
                 writer.writeBytes(cellName); // Name
@@ -116,6 +120,8 @@ class UpdateNodes {
                 flags |= 0x10; // isAgitated
             if (node.type == 3)
                 flags |= 0x20; // isEjected
+            if (node.type == 4) 
+                flags |= 0x40; // isSoperFood
             writer.writeUInt8(flags >>> 0); // Flags
             writer.writeUInt16(0); // Cell Name
         }
@@ -130,6 +136,9 @@ class UpdateNodes {
             if (node.owner) {
                 skinName = node.owner._skinUtf8;
                 cellName = node.owner._nameUnicode;
+            }
+            if (flags |= 0x40) {
+                skinName = node._skinUtf8;
             }
             // Write update record
             writer.writeUInt32((node.nodeId ^ scrambleId) >>> 0); // Cell ID
@@ -149,6 +158,8 @@ class UpdateNodes {
                 flags |= 0x10; // isAgitated
             if (node.type == 3)
                 flags |= 0x20; // isEjected
+            if (node.type == 4) 
+                flags |= 0x40; // isSoperFood
             writer.writeUInt8(flags >>> 0); // Flags
             if (flags & 0x04)
                 writer.writeBytes(skinName); // Skin Name in UTF8
@@ -184,6 +195,8 @@ class UpdateNodes {
                 flags |= 0x10; // isAgitated
             if (node.type == 3)
                 flags |= 0x20; // isEjected
+            if (node.type == 4) 
+                flags |= 0x40; // isSoperFood
             writer.writeUInt8(flags >>> 0); // Flags
             if (flags & 0x02) {
                 var color = node.color;
@@ -204,6 +217,10 @@ class UpdateNodes {
                 skinName = node.owner._skinUtf8;
                 cellName = node.owner._nameUtf8;
             }
+            if (flags |= 0x40) {
+                skinName = node._skinUtf8;
+            }
+
             // Write update record
             writer.writeUInt32((node.nodeId ^ scrambleId) >>> 0); // Cell ID
             writer.writeUInt32(cellX >> 0); // Coordinate X
@@ -222,6 +239,8 @@ class UpdateNodes {
                 flags |= 0x10; // isAgitated
             if (node.type == 3)
                 flags |= 0x20; // isEjected
+            if (node.type == 4) 
+                flags |= 0x40; // isSoperFood
             writer.writeUInt8(flags >>> 0); // Flags
             if (flags & 0x02) {
                 var color = node.color;
@@ -261,6 +280,8 @@ class UpdateNodes {
                 flags |= 0x10; // isAgitated
             if (node.type == 3)
                 flags |= 0x20; // isEjected
+            if (node.type == 4) 
+                flags |= 0x40; // isSoperFood
             if (node.type == 1)
                 flags |= 0x80; // isFood
             writer.writeUInt8(flags >>> 0); // Flags
@@ -303,6 +324,8 @@ class UpdateNodes {
                 flags |= 0x10; // isAgitated
             if (node.type == 3)
                 flags |= 0x20; // isEjected
+            if (node.type == 4) 
+                flags |= 0x40; // isSoperFood
             if (node.type == 1)
                 flags |= 0x80; // isFood
             writer.writeUInt8(flags >>> 0); // Flags
